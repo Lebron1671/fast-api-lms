@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "lms"
+version = "0.1.0"
+description = ""
+authors = ["Nick Dynin <dynin.nikolaj2010@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+uvicorn = "^0.23.2"
+fastapi = "^0.101.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
