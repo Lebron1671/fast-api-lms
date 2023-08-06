@@ -13,6 +13,7 @@ pydantic = "^2.1.1"
 sqlalchemy = "^2.0.19"
 psycopg2-binary = "^2.9.7"
 sqlalchemy-utils = "^0.41.1"
+alembic = "^1.11.2"
 
 
 [build-system]

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from api import users, sections, courses
 from db.db_setup import engine
+
 from db.models import user, course
 
 user.Base.metadata.create_all(bind=engine)

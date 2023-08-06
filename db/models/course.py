@@ -1,13 +1,12 @@
-from datetime import datetime
 import enum
 
 from sqlalchemy import Enum, Column, ForeignKey, Integer, String, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
 
-from ..db_setup import Base
 from .user import User
 from .mixins import Timestamp
+from db.models import base
 
 
 class ContentType(enum.Enum):
@@ -16,7 +15,7 @@ class ContentType(enum.Enum):
     assignment = 3
 
 
-class Course(Timestamp, Base):
+class Course(Timestamp, base.Base):
     __tablename__ = "courses"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -26,10 +25,10 @@ class Course(Timestamp, Base):
 
     created_by = relationship(User)
     sections = relationship("Section", back_populates="course", uselist=False)
-    student_courses = relationship("StudentCourse", back_populates="course")
+    student_coursess = relationship("StudentCourse", back_populates="course")
 
 
-class Section(Timestamp, Base):
+class Section(Timestamp, base.Base):
     __tablename__ = "sections"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -41,7 +40,7 @@ class Section(Timestamp, Base):
     content_blocks = relationship("ContentBlock", back_populates="section")
 
 
-class ContentBlock(Timestamp, Base):
+class ContentBlock(Timestamp, base.Base):
     __tablename__ = "content_blocks"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -56,7 +55,7 @@ class ContentBlock(Timestamp, Base):
     completed_content_blocks = relationship("CompletedContentBlock", back_populates="content_block")
 
 
-class StudentCourse(Timestamp, Base):
+class StudentCourse(Timestamp, base.Base):
     """
     Students can be assigned to courses.
     """
@@ -71,7 +70,7 @@ class StudentCourse(Timestamp, Base):
     course = relationship("Course", back_populates="student_courses")
 
 
-class CompletedContentBlock(Timestamp, Base):
+class CompletedContentBlock(Timestamp, base.Base):
     """
     This shows when a student has completed a content block.
     """
