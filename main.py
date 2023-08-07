@@ -4,8 +4,8 @@ from db.db_setup import engine
 
 from db.models import user, course
 
-user.Base.metadata.create_all(bind=engine)
-course.Base.metadata.create_all(bind=engine)
+#user.Base.metadata.create_all(bind=engine)
+#ourse.Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI(

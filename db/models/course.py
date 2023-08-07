@@ -25,7 +25,7 @@ class Course(Timestamp, base.Base):
 
     created_by = relationship(User)
     sections = relationship("Section", back_populates="course", uselist=False)
-    student_coursess = relationship("StudentCourse", back_populates="course")
+    student_courses = relationship("StudentCourse", back_populates="course")
 
 
 class Section(Timestamp, base.Base):
