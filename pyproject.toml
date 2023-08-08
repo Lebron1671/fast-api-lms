@@ -17,12 +17,6 @@ alembic = "^1.11.2"
 asyncpg = "^0.28.0"
 greenlet = "^2.0.2"
 
-
-[tool.poetry.group.dev.dependencies]
-flake8 = "^6.1.0"
-black = "^23.7.0"
-pre-commit = "^3.3.3"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
