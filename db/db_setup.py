@@ -1,15 +1,19 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-#Base = declarative_base()
-#metadata = Base.metadata
-
 SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:mysecretpassword@localhost/fast_lms"
+ASYNC_SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://postgres:mysecretpassword@localhost/fast_lms"
+
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={}, future=True
 )
+
+async_engine = create_async_engine(
+    ASYNC_SQLALCHEMY_DATABASE_URL
+)
+
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
@@ -17,6 +21,9 @@ SessionLocal = sessionmaker(
     future=True
 )
 
+AsyncSessionLocal = sessionmaker(
+    async_engine, class_=AsyncSession, expire_on_commit=False
+)
 
 
 # DB utilities
@@ -26,3 +33,8 @@ def get_db():
         yield db
     finally:
         db.close()
+
+async def async_get_db():
+    async with AsyncSessionLocal() as db:
+        yield db
+        await db.commit()
