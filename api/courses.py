@@ -20,7 +20,7 @@ async def read_courses(db: AsyncSession = Depends(async_get_db)):
     return [i[0] for i in courses]
 
 
-@router.post("/courses", response_model=Course)
+@router.post("/courses", response_model=Course, status_code=201)
 async def create_new_course(course: CourseCreate, db: AsyncSession = Depends(async_get_db)):
     return await create_course(db=db, course=course)
 
