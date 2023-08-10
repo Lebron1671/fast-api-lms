@@ -33,6 +33,16 @@ async def get_courses(db: AsyncSession):
     return result.fetchall()
 
 
+async def update_course(course_id: int, db: AsyncSession, course: CourseCreate):
+    db_course = await get_course(db, course_id)
+    for field, value in course.model_dump().items():
+        setattr(db_course, field, value)
+
+    await db.commit()
+    await db.refresh(db_course)
+    return db_course
+
+
 async def delete_course(db: AsyncSession, course_id: int):
     db_course = await get_course(db, course_id)
     await db.delete(db_course)

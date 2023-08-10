@@ -10,6 +10,7 @@ class UserBase(BaseModel):
     last_name: str
     birthday: date
     role: int
+    is_active: bool
     phone: Optional[str] = None
 
 
@@ -19,7 +20,6 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    is_active: bool
     created_at: datetime
     updated_at: datetime
 

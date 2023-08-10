@@ -2,9 +2,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:mysecretpassword@db:5432/fast_lms"
-ASYNC_SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://postgres:mysecretpassword@db:5432/fast_lms"
+# SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:mysecretpassword@db:5432/fast_lms"
+# ASYNC_SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://postgres:mysecretpassword@db:5432/fast_lms"
 
+SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:mysecretpassword@localhost/fast_lms"
+ASYNC_SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://postgres:mysecretpassword@localhost/fast_lms"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={}, future=True

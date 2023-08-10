@@ -8,21 +8,21 @@ from api.utils.users import get_user
 from db.db_setup import async_get_db
 from pydantic_schemas.course import CourseCreate, Course
 from api.utils.courses import get_course, get_courses, create_course, delete_course, get_course_students, \
-    add_user_to_course, add_teacher_to_course, get_student_courses, get_teacher_courses
+    add_user_to_course, add_teacher_to_course, get_student_courses, get_teacher_courses, update_course
 from pydantic_schemas.user import User
 
 router = fastapi.APIRouter()
+
+
+@router.post("/courses", response_model=Course, status_code=201)
+async def create_new_course(course: CourseCreate, db: AsyncSession = Depends(async_get_db)):
+    return await create_course(db=db, course=course)
 
 
 @router.get("/courses", response_model=List[Course])
 async def read_courses(db: AsyncSession = Depends(async_get_db)):
     courses = await get_courses(db=db)
     return [i[0] for i in courses]
-
-
-@router.post("/courses", response_model=Course, status_code=201)
-async def create_new_course(course: CourseCreate, db: AsyncSession = Depends(async_get_db)):
-    return await create_course(db=db, course=course)
 
 
 @router.get("/courses/{course_id}", response_model=Course)
@@ -33,7 +33,23 @@ async def read_course(course_id: int, db: AsyncSession = Depends(async_get_db)):
     return db_course
 
 
-@router.get("/users/{course_id}/users", response_model=List[User])
+@router.put("/courses/{course_id}", response_model=Course, status_code=200)
+async def modify_course(course_id: int, course: CourseCreate, db: AsyncSession = Depends(async_get_db)):
+    db_course = await get_course(db=db, course_id=course_id)
+    if db_course is None:
+        raise HTTPException(status_code=404, detail="Course not found")
+    return await update_course(course_id=course_id, db=db, course=course)
+
+
+@router.delete("/courses/{course_id}", status_code=204)
+async def remove_course(course_id: int, db: AsyncSession = Depends(async_get_db)):
+    db_course = await get_course(db=db, course_id=course_id)
+    if db_course is None:
+        raise HTTPException(status_code=404, detail="Course not found")
+    return await delete_course(db=db, course_id=course_id)
+
+
+@router.get("/courses/{course_id}/users", response_model=List[User])
 async def read_course_students(course_id: int, db: AsyncSession = Depends(async_get_db)):
     db_course = await get_course(db=db, course_id=course_id)
     if db_course is None:
@@ -82,17 +98,3 @@ async def assign_course_for_teacher(course_id: int, teacher_id: int, db: AsyncSe
         raise HTTPException(status_code=400, detail="Teacher is already enrolled in this course")
 
     return await add_teacher_to_course(db=db, course_id=course_id, teacher_id=teacher_id)
-
-
-@router.delete("/courses/{course_id}", status_code=204)
-async def remove_course(course_id: int, db: AsyncSession = Depends(async_get_db)):
-    db_course = await get_course(db=db, course_id=course_id)
-    if db_course is None:
-        raise HTTPException(status_code=404, detail="Course not found")
-    return await delete_course(db=db, course_id=course_id)
-
-
-#
-# @router.patch("/courses/{id}")
-# async def update_course():
-#     return {"courses": []}

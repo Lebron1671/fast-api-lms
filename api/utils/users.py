@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from db.models.user import User
@@ -37,29 +39,20 @@ async def get_users(db: AsyncSession, skip: int = 0, limit: int = 100):
     return result.fetchall()
 
 
+async def update_user(db: AsyncSession, user_id: int, user: UserCreate):
+    db_user = await get_user(db, user_id)
+    for field, value in user.model_dump().items():
+        setattr(db_user, field, value)
+
+    db_user.updated_at = datetime.utcnow()
+
+    await db.commit()
+    await db.refresh(db_user)
+    return db_user
+
+
 async def delete_user(db: AsyncSession, user_id: int):
     db_user = await get_user(db, user_id)
     await db.delete(db_user)
     await db.commit()
     return db_user
-
-# def get_user(db: Session, user_id: int):
-#     return db.query(User).filter(User.id == user_id).first()
-
-
-# async def get_user_by_email(db: AsyncSession, email: str):
-#     return db.query(User).filter(User.email == email).first()
-
-
-# def get_users(db: Session, skip: int = 0, limit: int = 100):
-#     return db.query(User).offset(skip).limit(limit).all()
-
-
-# def delete_user(db: Session, user_id: int):
-#     db_user = db.query(User).filter(User.id == user_id).first()
-#
-#     if db_user:
-#         db.delete(db_user)
-#         db.commit()
-#
-#     return db_user
